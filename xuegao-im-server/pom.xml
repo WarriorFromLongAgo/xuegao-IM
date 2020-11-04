@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xuegao</groupId>
-    <artifactId>xuegao-im-service</artifactId>
+    <artifactId>xuegao-im-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>xuegao-im-service</name>
+    <name>xuegao-im-server</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

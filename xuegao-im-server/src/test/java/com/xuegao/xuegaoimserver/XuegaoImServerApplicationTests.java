@@ -1,10 +1,10 @@
-package com.xuegao.xuegaoimservice;
+package com.xuegao.xuegaoimserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class XuegaoImServiceApplicationTests {
+class XuegaoImServerApplicationTests {
 
     @Test
     void contextLoads() {

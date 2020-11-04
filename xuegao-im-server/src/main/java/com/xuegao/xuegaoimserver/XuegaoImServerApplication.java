@@ -1,13 +1,13 @@
-package com.xuegao.xuegaoimservice;
+package com.xuegao.xuegaoimserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class XuegaoImServiceApplication {
+public class XuegaoImServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(XuegaoImServiceApplication.class, args);
+        SpringApplication.run(XuegaoImServerApplication.class, args);
     }
 
 }

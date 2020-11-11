@@ -18,7 +18,7 @@ public class ChatRoomHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
 
-    //广播
+    // 广播，给当前房间的所有人发送消息
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
 
@@ -53,7 +53,7 @@ public class ChatRoomHandler extends SimpleChannelInboundHandler<TextWebSocketFr
 
 
 
-    //离开,提示
+    //离开,提示，直接关闭浏览器的时候触发，也就是断开socket链接的时候
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         channels.remove(ctx.channel());

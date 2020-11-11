@@ -45,7 +45,7 @@ public class NettyWebsocketHandler extends ChannelInboundHandlerAdapter {
             handshaker = webSocketServerHandshakerFactory.newHandshaker(request);
 
             if (handshaker == null) {
-                webSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
+                WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
             } else {
                 handshaker.handshake(ctx.channel(), request);
             }

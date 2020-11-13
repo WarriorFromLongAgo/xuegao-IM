@@ -6,4 +6,5 @@ https://www.yuque.com/docs/share/688498ad-e19a-4458-8080-e0e713752505?# 《设�
 
 xuegao-im-demo 是一个简单demo
 
-xuegao-im-demo2 是一个简单的demo2，来自B站UP主 王仔OvO https://b23.tv/VpSOk4
+xuegao-im-wangzaiovo 是一个简单的demo2，来自B站UP主 王仔OvO https://b23.tv/VpSOk4
+是一个基于netty的实现，netty实现了websocket

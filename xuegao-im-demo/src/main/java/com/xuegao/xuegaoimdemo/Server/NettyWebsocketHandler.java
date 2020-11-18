@@ -40,7 +40,7 @@ public class NettyWebsocketHandler extends ChannelInboundHandlerAdapter {
                 return;
             }
 
-            WebSocketServerHandshakerFactory webSocketServerHandshakerFactory = new WebSocketServerHandshakerFactory("ws://localhost:8888/websocket", null, false);
+            WebSocketServerHandshakerFactory webSocketServerHandshakerFactory = new WebSocketServerHandshakerFactory("ws://localhost:8082/websocket", null, false);
 
             handshaker = webSocketServerHandshakerFactory.newHandshaker(request);
 

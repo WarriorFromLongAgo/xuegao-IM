@@ -4,9 +4,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.ssl.SslHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -27,10 +28,14 @@ public class MyWebSocketHandler extends ChannelInboundHandlerAdapter {
     private static final String HTTP_FAIL_MESSAGE = "请求异常";
     private static final String WEB_SOCKET_FACTORY = "ws://127.0.0.1:8888/websocket";
 
+    private WebSocketServerHandshaker webSocketServerHandshaker;
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) msg);
+        } else if (msg instanceof WebSocketFrame) {
+            handleWebSocketRequest(ctx, msg);
         }
     }
 
@@ -53,6 +58,24 @@ public class MyWebSocketHandler extends ChannelInboundHandlerAdapter {
         }
         WebSocketServerHandshakerFactory webSocketServerHandshakerFactory =
                 new WebSocketServerHandshakerFactory(WEB_SOCKET_FACTORY, null, false);
+        webSocketServerHandshaker = webSocketServerHandshakerFactory.newHandshaker(fullHttpRequest);
+        if (ObjectUtils.isEmpty(webSocketServerHandshaker)) {
+            WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
+        } else {
+            webSocketServerHandshaker.handshake(ctx.channel(), fullHttpRequest);
+        }
+    }
+
+    // 王仔 OvO
+    private void handleWebSocketRequest(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof CloseWebSocketFrame) {
+            webSocketServerHandshaker.close(ctx.channel(), (CloseWebSocketFrame) msg);
+        } else if (msg instanceof TextWebSocketFrame) {
+            TextWebSocketFrame textWebSocketFrame = (TextWebSocketFrame) msg;
+            String text = "server：" + textWebSocketFrame.text();
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(text));
+
+        }
 
     }
 
@@ -73,32 +96,32 @@ public class MyWebSocketHandler extends ChannelInboundHandlerAdapter {
     //     }
     // }
 
-    private static void sendHttpResponse(ChannelHandlerContext ctx,
-                                         FullHttpRequest fullHttpRequest,
-                                         FullHttpResponse fullHttpResponse) {
-        // Generate an error page if response getStatus code is not OK (200).
-        if (!HTTP_STATUS_SUCCESS.equals(fullHttpResponse.status().code())) {
-            ByteBuf byteBuf = Unpooled.copiedBuffer(fullHttpResponse.status().toString(), StandardCharsets.UTF_8);
-            fullHttpResponse.content().writeBytes(byteBuf);
-            byteBuf.release();
-            // HttpHeaders.setContentLength(fullHttpResponse, fullHttpResponse.content().readableBytes());
-            HttpUtil.setContentLength(fullHttpResponse, fullHttpResponse.content().readableBytes());
-        }
+    // private static void sendHttpResponse(ChannelHandlerContext ctx,
+    //                                      FullHttpRequest fullHttpRequest,
+    //                                      FullHttpResponse fullHttpResponse) {
+    //     // Generate an error page if response getStatus code is not OK (200).
+    //     if (!HTTP_STATUS_SUCCESS.equals(fullHttpResponse.status().code())) {
+    //         ByteBuf byteBuf = Unpooled.copiedBuffer(fullHttpResponse.status().toString(), StandardCharsets.UTF_8);
+    //         fullHttpResponse.content().writeBytes(byteBuf);
+    //         byteBuf.release();
+    //         // HttpHeaders.setContentLength(fullHttpResponse, fullHttpResponse.content().readableBytes());
+    //         HttpUtil.setContentLength(fullHttpResponse, fullHttpResponse.content().readableBytes());
+    //     }
+    //
+    //     // Send the response and close the connection if necessary.
+    //     ChannelFuture channelFuture = ctx.channel().writeAndFlush(fullHttpResponse);
+    //     // if (!HttpHeaders.isKeepAlive(fullHttpRequest) || fullHttpResponse.getStatus().code() != 200) {
+    //     if (!HttpUtil.isKeepAlive(fullHttpRequest) || !HTTP_STATUS_SUCCESS.equals(fullHttpResponse.status().code())) {
+    //         channelFuture.addListener(ChannelFutureListener.CLOSE);
+    //     }
+    // }
 
-        // Send the response and close the connection if necessary.
-        ChannelFuture channelFuture = ctx.channel().writeAndFlush(fullHttpResponse);
-        // if (!HttpHeaders.isKeepAlive(fullHttpRequest) || fullHttpResponse.getStatus().code() != 200) {
-        if (!HttpUtil.isKeepAlive(fullHttpRequest) || !HTTP_STATUS_SUCCESS.equals(fullHttpResponse.status().code())) {
-            channelFuture.addListener(ChannelFutureListener.CLOSE);
-        }
-    }
-
-    private static String getWebSocketLocation(ChannelPipeline channelPipeline, HttpRequest httpRequest, String path) {
-        String protocol = "ws";
-        if (channelPipeline.get(SslHandler.class) != null) {
-            // SSL in use so use Secure WebSockets
-            protocol = "wss";
-        }
-        return protocol + "://" + httpRequest.headers().get(HttpHeaderNames.HOST) + path;
-    }
+    // private static String getWebSocketLocation(ChannelPipeline channelPipeline, HttpRequest httpRequest, String path) {
+    //     String protocol = "ws";
+    //     if (channelPipeline.get(SslHandler.class) != null) {
+    //         // SSL in use so use Secure WebSockets
+    //         protocol = "wss";
+    //     }
+    //     return protocol + "://" + httpRequest.headers().get(HttpHeaderNames.HOST) + path;
+    // }
 }

@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ChatServerConfig {
-
     private static final String WEB_SOCKET = "/websocket";
 
     @Bean(name = "bossGroup", destroyMethod = "shutdownGracefully")
@@ -48,9 +48,10 @@ public class ChatServerConfig {
                         socketChannel.pipeline().addLast(new HttpServerCodec());
                         socketChannel.pipeline().addLast(new ChunkedWriteHandler());
                         socketChannel.pipeline().addLast(new HttpObjectAggregator(65536));
-
-                        socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(WEB_SOCKET));
-
+                        // netty 的
+                        // socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(WEB_SOCKET));
+                        // 我自己的
+                        socketChannel.pipeline().addLast(myWebSocketHandler);
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)
@@ -62,5 +63,11 @@ public class ChatServerConfig {
     public Bootstrap bootstrap() {
         return new Bootstrap();
     }
+    
+    private MyWebSocketHandler myWebSocketHandler;
 
+    @Autowired
+    public ChatServerConfig(MyWebSocketHandler myWebSocketHandler) {
+        this.myWebSocketHandler = myWebSocketHandler;
+    }
 }

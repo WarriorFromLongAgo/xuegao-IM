@@ -1,0 +1,51 @@
+spring:
+  aop:
+    auto: true #启动aop配置
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xuegao-im?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+  redis:
+    host: 127.0.0.1
+    database: 0
+    port: 6379
+    timeout: 10000
+    lettuce:
+      shutdown-timeout: 10000
+      pool:
+        max-active: 8
+        max-wait: 0
+        min-idle: 0
+        max-idle: 8
+mybatis-plus:
+  #  config-location: classpath:mybatis-config.xml # 配置 MyBatis 配置文件路径
+  mapper-locations: classpath:mapper/*.xml  # 配置 Mapper XML 地址
+  typeAliasesPackage: com.xuegao.xuegaoimbase.mapper  # 配置数据库实体包路径
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+  global-config:
+    db-config:
+      #数据库大写下划线转换
+      capital-mode: false
+      #删除
+      logic-delete-value: 1
+      #不删除
+      logic-not-delete-value: 0
+
+logging:
+  #  由于引入了 log4j2，不再是 logback，，先注释
+  config: classpath:log4j2-spring.xml
+  level:
+    root: info
+    cn.jay.repository: trace
+    com.xuegao.xuegaoimbase.mapper: debug
+
+#pagehelper分页插件
+pagehelper:
+  reasonable: false
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql

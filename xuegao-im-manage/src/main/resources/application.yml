@@ -2,7 +2,7 @@ server:
   port: 12000
   servlet:
     context-path: /
-  #  gzip 开启
+  #  gzip 锟斤拷锟斤拷
   compression:
     enabled: true
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
@@ -12,7 +12,7 @@ spring:
     name: xuegao-im-manage
   servlet:
     multipart:
-      #      文件上传单次的大小，
+      #      锟侥硷拷锟较达拷锟斤拷锟轿的达拷小锟斤拷
       max-file-size: 10MB
       max-request-size: 100MB
 

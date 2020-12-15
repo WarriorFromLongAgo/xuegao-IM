@@ -1,6 +1,6 @@
 spring:
   aop:
-    auto: true #Æô¶¯aopÅäÖÃ
+    auto: true 
   datasource:
     username: root
     password: 123456
@@ -19,33 +19,48 @@ spring:
         min-idle: 0
         max-idle: 8
 mybatis-plus:
-  #  config-location: classpath:mybatis-config.xml # ÅäÖÃ MyBatis ÅäÖÃÎÄ¼şÂ·¾¶
-  mapper-locations: classpath:mapper/*.xml  # ÅäÖÃ Mapper XML µØÖ·
-  typeAliasesPackage: com.xuegao.xuegaoimbase.mapper  # ÅäÖÃÊı¾İ¿âÊµÌå°üÂ·¾¶
+  #  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+  typeAliasesPackage: com.xuegao.xuegaoimbase.mapper
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
     cache-enabled: true
   global-config:
     db-config:
-      #Êı¾İ¿â´óĞ´ÏÂ»®Ïß×ª»»
       capital-mode: false
-      #É¾³ı
       logic-delete-value: 1
-      #²»É¾³ı
       logic-not-delete-value: 0
 
 logging:
-  #  ÓÉÓÚÒıÈëÁË log4j2£¬²»ÔÙÊÇ logback£¬£¬ÏÈ×¢ÊÍ
   config: classpath:log4j2-spring.xml
   level:
     root: info
     cn.jay.repository: trace
     com.xuegao.xuegaoimbase.mapper: debug
 
-#pagehelper·ÖÒ³²å¼ş
 pagehelper:
   reasonable: false
   helperDialect: mysql
   supportMethodsArguments: true
   params: count=countSql
+
+# netty-socketio é…ç½®
+socketio:
+  host: 127.0.0.1
+  port: 8888
+  # è®¾ç½®æœ€å¤§æ¯å¸§å¤„ç†æ•°æ®çš„é•¿åº¦ï¼Œé˜²æ­¢ä»–äººåˆ©ç”¨å¤§æ•°æ®æ¥æ”»å‡»æœåŠ¡å™¨
+  maxFramePayloadLength: 1048576
+  # è®¾ç½®httpäº¤äº’æœ€å¤§å†…å®¹é•¿åº¦
+  maxHttpContentLength: 1048576
+  # socketè¿æ¥æ•°å¤§å°ï¼ˆå¦‚åªç›‘å¬ä¸€ä¸ªç«¯å£bossçº¿ç¨‹ç»„ä¸º1å³å¯ï¼‰
+  bossCount: 1
+  workCount: 100
+  allowCustomRequests: true
+  # åè®®å‡çº§è¶…æ—¶æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰ï¼Œé»˜è®¤10ç§’ã€‚HTTPæ¡æ‰‹å‡çº§ä¸ºwsåè®®è¶…æ—¶æ—¶é—´
+  upgradeTimeout: 1000000
+  # Pingæ¶ˆæ¯è¶…æ—¶æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰ï¼Œé»˜è®¤60ç§’ï¼Œè¿™ä¸ªæ—¶é—´é—´éš”å†…æ²¡æœ‰æ¥æ”¶åˆ°å¿ƒè·³æ¶ˆæ¯å°±ä¼šå‘é€è¶…æ—¶äº‹ä»¶
+  pingTimeout: 6000000
+  # Pingæ¶ˆæ¯é—´éš”ï¼ˆæ¯«ç§’ï¼‰ï¼Œé»˜è®¤25ç§’ã€‚å®¢æˆ·ç«¯å‘æœåŠ¡å™¨å‘é€ä¸€æ¡å¿ƒè·³æ¶ˆæ¯é—´éš”
+  pingInterval: 25000
+

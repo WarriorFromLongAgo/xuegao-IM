@@ -1,10 +1,10 @@
-package com.xuegao.xuegaoimwangzaiovo;
+package com.xuegao.xuegaoimsocketiodemo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class XuegaoImWangzaiovoApplicationTests {
+class XuegaoImSocketioDemoApplicationTests {
 
     @Test
     void contextLoads() {

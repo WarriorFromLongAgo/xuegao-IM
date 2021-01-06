@@ -23,22 +23,22 @@ public class SocketIOConfig {
     private Integer port;
 
     @Value("${socketio.bossCount}")
-    private int bossCount;
+    private Integer bossCount;
 
     @Value("${socketio.workCount}")
-    private int workCount;
+    private Integer workCount;
 
     @Value("${socketio.allowCustomRequests}")
-    private boolean allowCustomRequests;
+    private Boolean allowCustomRequests;
 
     @Value("${socketio.upgradeTimeout}")
-    private int upgradeTimeout;
+    private Integer upgradeTimeout;
 
     @Value("${socketio.pingTimeout}")
-    private int pingTimeout;
+    private Integer pingTimeout;
 
     @Value("${socketio.pingInterval}")
-    private int pingInterval;
+    private Integer pingInterval;
 
     @Bean
     public SocketIOServer socketIOServer() {

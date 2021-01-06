@@ -3,6 +3,7 @@ package com.xuegao.xuegaoimcommon.mvc.mvcconfigurer;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.xuegao.xuegaoimcommon.mvc.filter.CORSFilter;
 import com.xuegao.xuegaoimcommon.mvc.filter.XssFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +60,7 @@ public class AddInterceptors implements WebMvcConfigurer {
 
         // registry.addInterceptor(redisLimitInterceptor)
         //         .addPathPatterns("/**");
+        registry.addInterceptor(new CORSFilter()).addPathPatterns("/**");
     }
 
     // 配置静态资源路径
@@ -75,25 +77,25 @@ public class AddInterceptors implements WebMvcConfigurer {
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
     }
 
-    // 重写父类提供的跨域请求处理的接口，跨域处理
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        //添加映射路径
-        registry.addMapping("/**")
-                // 开放哪些ip、端口、域名的访问权限，星号表示开放所有域
-                .allowedOrigins("*")
-                // 是否允许发送Cookie信息
-                .allowCredentials(true)
-                // 开放哪些Http方法，允许跨域访问
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
-                // 放行哪些原始域(头部信息) 允许HTTP请求中的携带哪些Header信息
-                .allowedHeaders("*")
-                //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
-                .exposedHeaders("Header1", "Header2");
-        //添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置
-        // UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
-        // configSource.registerCorsConfiguration("/**", config);
-    }
+    // // 重写父类提供的跨域请求处理的接口，跨域处理
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     //添加映射路径
+    //     registry.addMapping("/**")
+    //             // 开放哪些ip、端口、域名的访问权限，星号表示开放所有域
+    //             .allowedOrigins("*")
+    //             // 是否允许发送Cookie信息
+    //             .allowCredentials(true)
+    //             // 开放哪些Http方法，允许跨域访问
+    //             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
+    //             // 放行哪些原始域(头部信息) 允许HTTP请求中的携带哪些Header信息
+    //             .allowedHeaders("*")
+    //             //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
+    //             .exposedHeaders("Header1", "Header2");
+    //     //添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置
+    //     // UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+    //     // configSource.registerCorsConfiguration("/**", config);
+    // }
 
     /**
      * XssFilter. xss攻击过滤

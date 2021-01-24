@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>template WebSocket Chat</title>
+</head>
+<body>
+<!--输入内容-->
+<input type="text" placeholder="请输入你的内容"/>
+<!--发送请求-->
+<button>发送请求</button>
+<!--展示内容-->
+<div></div>
+<script type="text/javascript">
+    let input = document.querySelector('input');
+    let button = document.querySelector('button');
+    let div = document.querySelector('div');
+
+    // 1，创建websocket
+    // let socket = new WebSocket("ws://localhost:8888/websocket");
+    let socket = new WebSocket("ws://echo.websocket.org");
+    // 2，open，当websocket链接服务端成功的时候触发
+    socket.addEventListener('open', function () {
+        div.innerHTML = '链接服务成功了'
+    })
+    // 3，主动的向websocket服务端发送消息
+    button.addEventListener('click', function () {
+        let value = input.value;
+        socket.send(value);
+    })
+    // 4，接收websocket的数据
+    socket.addEventListener('message', function (response) {
+        console.log(response);
+        let data = response.data;
+        console.log(data)
+    })
+    socket.addEventListener('close', function () {
+        // 断开链接
+        socket.close();
+    })
+
+
+</script>
+
+</body>
+</html>

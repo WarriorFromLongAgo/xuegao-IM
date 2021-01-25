@@ -1,0 +1,11 @@
+rt-server:
+  port: 9092
+  host: localhost
+
+spring:
+  main:
+    banner-mode: off
+
+logging:
+  level:
+    com.xuegao.imsocketioserver2: DEBUG

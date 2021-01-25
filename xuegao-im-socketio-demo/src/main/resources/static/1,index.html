@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>SocketIOClient_V1.0</title>
+    <base>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/socket.io/3.1.0/socket.io.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #console {
+            height: 450px;
+            overflow: auto;
+        }
+
+        .username-msg {
+            color: orange;
+        }
+
+        .connect-msg {
+            color: green;
+        }
+
+        .disconnect-msg {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<h2>SocketClient_V1.0</h2>
+<div style="border: 1px;">
+    <label>socketurl:</label><input type="text" id="url" value="http://localhost:8888">
+    <br>
+    <label>clientId:</label><input type="text" id="clientId" value="123456">
+    <br>
+    <button id="connect">connect</button>
+    <button id="disconnect">disconnect</button>
+
+</div>
+<br>
+<div style="border: 1px;">
+    <label>socketEvent:</label><input type="text" id="socketEvent">
+    <br>
+    <label>content:</label><br><textarea id="content" maxlength="1000" cols="30" rows="5"></textarea>
+    <br>
+    <button id="send">send</button>
+</div>
+<br>
+<div id="console" class="well"></div>
+</body>
+<script type="text/javascript">
+    let socket;
+    let errorCount = 0;
+    let isConnected = false;
+    let maxError = 5;
+
+    // connect(null,null);
+
+    function connect(url, clientId) {
+        if (url === '' || url == null) {
+            url = 'http://localhost:8888';
+        }
+
+        if (clientId === '' || clientId == null) {
+            clientId = 7729;
+        }
+        let opts = {
+            query: 'clientId=' + clientId
+        };
+        socket = io.connect(url, opts);
+
+        socket.on('connect', function () {
+            isConnected = true;
+            console.log(data)
+            console.log("连接成功");
+            serverOutput('<span class="connect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>连接成功</span>');
+            errorCount = 0;
+        });
+        socket.on('message', function (data) {
+            output('<span class="username-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + data + ' </span>');
+            console.log(data);
+        });
+
+        socket.on('disconnect', function () {
+            isConnected = false;
+            console.log("连接断开");
+            serverOutput('<span class="disconnect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + '已下线! </span>');
+        });
+        socket.on('connect_error', function (data) {
+            console.log(data)
+            serverOutput('<span class="disconnect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>;' + '连接错误-' + data + ' </span>');
+            errorCount++;
+            if (errorCount >= maxError) {
+                socket.disconnect();
+            }
+        });
+        socket.on('connect_timeout', function (data) {
+            serverOutput('<span class="disconnect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + '连接超时-' + data + ' </span>');
+            errorCount++;
+            if (errorCount >= maxError) {
+                socket.disconnect();
+            }
+        });
+        socket.on('error', function (data) {
+            serverOutput('<span class="disconnect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + '系统错误-' + data + ' </span>');
+            errorCount++;
+            if (errorCount >= maxError) {
+                socket.disconnect();
+            }
+        });
+        socket.on('ack', function (data) {
+            let str = '消息发送失败';
+            if (data === 1) {
+                str = '消息发送成功';
+            }
+            serverOutput('<span class="connect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + str + ' </span>');
+
+        });
+    }
+
+    function output(message) {
+        let element = $("<div>" + " " + message + "</div>");
+        $('#console').prepend(element);
+    }
+
+    function serverOutput(message) {
+        let element = $("<div>" + message + "</div>");
+        $('#console').prepend(element);
+    }
+
+    $("#connect").click(function () {
+        if (!isConnected) {
+            let url = $("#url").val();
+            let clientId = $("#clientId").val();
+            connect(url, clientId);
+        }
+    })
+
+
+    $("#disconnect").click(function () {
+        if (isConnected) {
+            socket.disconnect();
+        }
+    })
+
+    $("#send").click(function () {
+        let socketEvent = $("#socketEvent").val();
+        let content = $("#content").val();
+        serverOutput('<span class="connect-msg"><font color="blue">' + getNowTime() + '&nbsp;</font>' + '发送消息-' + content + ' </span>');
+        socket.emit(socketEvent, content);
+    })
+
+    function getNowTime() {
+        let date = new Date();
+        let year = date.getFullYear(); //获取当前年份
+        let mon = date.getMonth() + 1; //获取当前月份
+        let da = date.getDate(); //获取当前日
+        let h = date.getHours(); //获取小时
+        let m = date.getMinutes(); //获取分钟
+        let s = date.getSeconds(); //获取秒
+        let ms = date.getMilliseconds();
+        let d = document.getElementById('Date');
+        return year + '/' + mon + '/' + da + ' ' + h + ':' + m + ':' + s + ':' + ms;
+    }
+</script>
+</html>

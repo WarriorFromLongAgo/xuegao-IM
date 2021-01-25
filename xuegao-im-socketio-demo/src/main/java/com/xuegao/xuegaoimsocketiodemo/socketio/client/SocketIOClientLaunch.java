@@ -30,6 +30,9 @@ public class SocketIOClientLaunch {
             // userId: 唯一标识 传给服务端存储
             final Socket socket = IO.socket(url + "?userId=1", options);
 
+            socket.on(Socket.EVENT_CONNECTING, objects -> System.out.println("client: " + "连接中"));
+            socket.on(Socket.EVENT_CONNECT_TIMEOUT, objects -> System.out.println("client: " + "连接超时"));
+            socket.on(Socket.EVENT_CONNECT_ERROR, objects -> System.out.println("client: " + "连接失败"));
             socket.on(Socket.EVENT_CONNECT, args1 -> socket.send("hello..."));
 
             // 自定义事件`connected` -> 接收服务端成功连接消息

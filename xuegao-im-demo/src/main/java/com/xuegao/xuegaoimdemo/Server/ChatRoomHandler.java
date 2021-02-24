@@ -29,6 +29,9 @@ public class ChatRoomHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         Channel incoming = ctx.channel();
 
         for (Channel channel : channels) {
+            String s = channel.id().asLongText();
+            System.out.println(s);
+
             //不是刚刚进来的
             if (channel != incoming ){
                 channel.writeAndFlush(new TextWebSocketFrame(ctx.channel().remoteAddress() + ":" + content));
